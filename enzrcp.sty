@@ -63,10 +63,10 @@
 
 \newcommand{\enzrcp}[6][]{%
 \recipe[#1]{#2}{#3}{#4}{%
-\textbf{Incubation:} #5
+\if\relax\detokenize{#5}\relax\else\textbf{Incubation:} #5\fi
 
 \smallskip
-\textbf{Inactivation:} #6}}
+\if\relax\detokenize{#6}\relax\else\textbf{Inactivation:} #6\fi}}
 
 
 \newcommand{\enzrcpTemp}[1]{\SI{#1}{\degreeCelsius}}
