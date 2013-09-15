@@ -75,34 +75,30 @@
 \newcommand{\enzrcpTimeTemp}[3]{\enzrcpTime{#1}{#2}~@~\enzrcpTemp{#3}}
 
 
-\newcommand{\PCR}[7][]{%
+\newcommand{\PCR}[9][]{%
 \def\enzrcpNB{#1}%\if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi}%
 \def\enzrcpID{#2}%
 \def\enzrcpCaption{#3}%
 \def\enzrcpIngred{#4}%
-\def\enzrcpMeltingA{\enzrcpTimeTemp{#5}{#6}{#7}}%
+\def\enzrcpMeltingInitial{#5}%
+\def\enzrcpCycle{#6 $\times$}
+\def\enzrcpMeltingCycle{#7}%
+\def\enzrcpAnnealing{#8}%
+\def\enzrcpElongationCycle{#9}%
 \PCRcontinuedA%
 }
 
-\newcommand{\PCRcontinuedA}[9]{%
-\def\enzrcpMeltingB{\enzrcpTimeTemp{#1}{#2}{#3}}%
-\def\enzrcpAnnealing{\enzrcpTimeTemp{#4}{#5}{#6}}%
-\def\enzrcpElongationA{\enzrcpTimeTemp{#7}{#8}{#9}}%
-\PCRcontinuedB%
-}
-
-\newcommand{\PCRcontinuedB}[5]{%
-\def\enzrcpCycle{#1 $\times$}
-\def\enzrcpElongationB{\enzrcpTimeTemp{#2}{#3}{#4}}%
-\def\enzrcpStorage{\enzrcpTemp{#5}~$\infty$}%
+\newcommand{\PCRcontinuedA}[2]{%
+\def\enzrcpElongationFinal{#1}%
+\def\enzrcpStorage{\enzrcpTemp{#2}~$\infty$}%
 \recipe[\enzrcpNB]{\enzrcpID}{\enzrcpCaption}{\enzrcpIngred}{%
-\textbf{Melting:} \enzrcpMeltingA
+\textbf{Melting:} \enzrcpMeltingInitial
 
 \schema{\schemabox{\enzrcpCycle}}{\schemabox{%
-\textbf{Melting:} \enzrcpMeltingB\\
+\textbf{Melting:} \enzrcpMeltingCycle\\
 \textbf{Annealing:} \enzrcpAnnealing\\
-\textbf{Elongation:} \enzrcpElongationA}}
+\textbf{Elongation:} \enzrcpElongationCycle}}
 
-\textbf{Elongation:} \enzrcpElongationB
+\textbf{Elongation:} \enzrcpElongationFinal
 
 \textbf{Storage:} \enzrcpStorage}}
