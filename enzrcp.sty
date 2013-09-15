@@ -21,36 +21,44 @@
 
 \sisetup{detect-family}
 
+\makeatletter
+\newcommand{\enzrcp@recipewidth}{0.9\textwidth}
+\newcommand{\enzrcp@ingredwidth}{0.45\textwidth}
+\newcommand{\enzrcp@ingrednamewidth}{0.5\textwidth}
+\newcommand{\enzrcp@ingredspacewidth}{0.5em}
+\newcommand{\enzrcp@instrwidth}{0.5\textwidth}
+\makeatother
 
 \newcommand{\NB}{\textbf{N.B.} }
 
 
 \newcommand{\ingred}[3]{#1&#2&\si{#3}\\}
 
-
+\makeatletter
 \newcommand{\recipe}[5][]{%
 \begin{Recipe}[H]
 \caption{#3}
 \label{rcp:#2}
 \medskip
 \centering
-\begin{minipage}[t]{0.9\textwidth}
+\begin{minipage}[t]{\enzrcp@recipewidth}
 \sffamily
-\begin{minipage}[c]{0.45\textwidth}
-\begin{tabular}{p{0.5\textwidth}@{\hspace{0.5em}}S@{}s}
+\begin{minipage}[c]{\enzrcp@ingredwidth}
+\begin{tabular}{p{\enzrcp@ingrednamewidth}@{\hspace{\enzrcp@ingredspacewidth}}S@{}s}
 \toprule
 #4
 \bottomrule
 \end{tabular}
 \end{minipage}
 \hfill
-\begin{minipage}[c]{0.5\textwidth}
+\begin{minipage}[c]{\enzrcp@instrwidth}
 #5
 \end{minipage}
 \smallskip
 \if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi
 \end{minipage}
 \end{Recipe}}
+\makeatother
 
 
 \newcommand{\enzrcp}[6][]{%
