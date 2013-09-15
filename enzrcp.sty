@@ -1,0 +1,100 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{enzrcp}[2013/08/11 v0.4 Typeset recipes for enzyme reactions]
+
+\RequirePackage{float}[2001/11/08]
+\RequirePackage{booktabs}[2005/04/14]
+\RequirePackage{siunitx}[2012/12/29]
+\RequirePackage{schemata}[2013/03/10]
+
+
+\makeatletter
+\newcommand\fs@plaintopbf{\fs@plaintop
+\def\@fs@cfont{\sffamily\bfseries}}
+\let\floatc@plaintop=\floatc@plain
+\let\float@captionold\caption
+\renewcommand{\caption}[1]{\float@captionold{\textsf{#1}}}
+\makeatother
+
+\floatstyle{plaintopbf}
+\newfloat{Recipe}{tbp}{rcp}
+
+
+\sisetup{detect-family}
+
+
+\newcommand{\NB}{\textbf{N.B.} }
+
+
+\newcommand{\ingred}[3]{#1&#2&\si{#3}\\}
+
+
+\newcommand{\recipe}[5][]{%
+\begin{Recipe}[H]
+\caption{#3}
+\label{rcp:#2}
+\medskip
+\centering
+\begin{minipage}[t]{0.9\textwidth}
+\sffamily
+\begin{minipage}[c]{0.45\textwidth}
+\begin{tabular}{p{0.5\textwidth}@{\hspace{0.5em}}S@{}s}
+\toprule
+#4
+\bottomrule
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.5\textwidth}
+#5
+\end{minipage}
+\smallskip
+\if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi
+\end{minipage}
+\end{Recipe}}
+
+
+\newcommand{\enzrcp}[6][]{%
+\recipe[#1]{#2}{#3}{#4}{%
+\textbf{Incubation:} #5
+
+\smallskip
+\textbf{Inactivation:} #6}}
+
+
+\newcommand{\enzrcpTemp}[1]{\SI{#1}{\degreeCelsius}}
+\newcommand{\enzrcpTime}[2]{\if\relax\detokenize{#1}\relax\else\SI{#1}{\arcminute}\fi%
+\if\relax\detokenize{#2}\relax\else\SI{#2}{\arcsecond}\fi}
+\newcommand{\enzrcpTimeTemp}[3]{\enzrcpTime{#1}{#2}~@~\enzrcpTemp{#3}}
+
+
+\newcommand{\PCR}[7][]{%
+\def\enzrcpNB{#1}%\if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi}%
+\def\enzrcpID{#2}%
+\def\enzrcpCaption{#3}%
+\def\enzrcpIngred{#4}%
+\def\enzrcpMeltingA{\enzrcpTimeTemp{#5}{#6}{#7}}%
+\PCRcontinuedA%
+}
+
+\newcommand{\PCRcontinuedA}[9]{%
+\def\enzrcpMeltingB{\enzrcpTimeTemp{#1}{#2}{#3}}%
+\def\enzrcpAnnealing{\enzrcpTimeTemp{#4}{#5}{#6}}%
+\def\enzrcpElongationA{\enzrcpTimeTemp{#7}{#8}{#9}}%
+\PCRcontinuedB%
+}
+
+\newcommand{\PCRcontinuedB}[5]{%
+\def\enzrcpCycle{#1 $\times$}
+\def\enzrcpElongationB{\enzrcpTimeTemp{#2}{#3}{#4}}%
+\def\enzrcpStorage{\enzrcpTemp{#5}~$\infty$}%
+\recipe[\enzrcpNB]{\enzrcpID}{\enzrcpCaption}{\enzrcpIngred}{%
+\textbf{Melting:} \enzrcpMeltingA
+
+\schema{\schemabox{\enzrcpCycle}}{\schemabox{%
+\textbf{Melting:} \enzrcpMeltingB\\
+\textbf{Annealing:} \enzrcpAnnealing\\
+\textbf{Elongation:} \enzrcpElongationA}}
+
+\textbf{Elongation:} \enzrcpElongationB
+
+\textbf{Storage:} \enzrcpStorage}}
