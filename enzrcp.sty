@@ -5,15 +5,95 @@
 \RequirePackage{booktabs}[2005/04/14]
 \RequirePackage{siunitx}[2012/12/29]
 \RequirePackage{schemata}[2013/03/10]
+\RequirePackage{kvoptions}[2011/06/30]
+\RequirePackage{ifthen}[2001/05/26]
 
+\SetupKeyvalOptions{
+ family=enzrcp,
+ prefix=enzrcp@
+}
+\DeclareStringOption[0.9\textwidth]{recipewidth}
+\DeclareStringOption[0.45\textwidth]{ingredwidth}
+\DeclareStringOption[0.5\textwidth]{ingrednamewidth}
+\DeclareStringOption[0.5em]{ingredspacewidth}
+\DeclareStringOption[0.5\textwidth]{instrwidth}
+\ProcessKeyvalOptions*
 
-\makeatletter
+\newlength{\enzrcp@privaterecipewidth}
+\newlength{\enzrcp@privateingredwidth}
+\newlength{\enzrcp@privateingrednamewidth}
+\newlength{\enzrcp@privateingredspacewidth}
+\newlength{\enzrcp@privateinstrwidth}
+
+\newcommand{\enzrcpspacing}[2]{%
+ \ifthenelse{\equal{recipewidth}{#1}}{%
+  \ifthenelse{\equal{initial}{#2}}{%
+   \setlength{\enzrcp@privaterecipewidth}{\enzrcp@recipewidth}%
+  }{%
+   \setlength{\enzrcp@privaterecipewidth}{#2}%
+  }%
+ }{%
+  \ifthenelse{\equal{ingredwidth}{#1}}{%
+   \ifthenelse{\equal{initial}{#2}}{%
+    \setlength{\enzrcp@privateingredwidth}{\enzrcp@ingredwidth}%
+   }{%
+    \setlength{\enzrcp@privateingredwidth}{#2}%
+   }%
+  }{%
+   \ifthenelse{\equal{ingrednamewidth}{#1}}{%
+    \ifthenelse{\equal{initial}{#2}}{%
+     \setlength{\enzrcp@privateingrednamewidth}{\enzrcp@ingrednamewidth}%
+    }{%
+     \setlength{\enzrcp@privateingrednamewidth}{#2}%
+    }%
+   }{%
+    \ifthenelse{\equal{ingredspacewidth}{#1}}{%
+     \ifthenelse{\equal{initial}{#2}}{%
+      \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}%
+     }{%
+      \setlength{\enzrcp@privateingredspacewidth}{#2}%
+     }%
+    }{%
+     \ifthenelse{\equal{instrwidth}{#1}}{%
+      \ifthenelse{\equal{initial}{#2}}{%
+       \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
+      }{%
+       \setlength{\enzrcp@privateinstrwidth}{#2}%
+      }%
+     }{%
+      \ifthenelse{\equal{all}{#1}}{%
+       \ifthenelse{\equal{initial}{#2}}{%
+        \setlength{\enzrcp@privaterecipewidth}{\enzrcp@recipewidth}%
+        \setlength{\enzrcp@privateingredwidth}{\enzrcp@ingredwidth}%
+        \setlength{\enzrcp@privateingrednamewidth}{\enzrcp@ingrednamewidth}%
+        \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}
+        \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
+       }{%
+        \PackageError{enzrcp}%
+{Invalid arguments to \string\enzrcpspacing}%
+{The second argument should be 'initial' if the first is 'all'.}%
+       }%
+      }{%
+       \PackageError{enzrcp}%
+{Invalid arguments to \string\enzrcpspacing}%
+{The first argument must be one of the following:\MessageBreak
+recipewidth, ingredwidth, ingrednamewidth, ingredspacewidth,\MessageBreak
+instrwidth, all.}%
+      }%
+     }%
+    }%
+   }%
+  }%
+ }%
+}
+
+\enzrcpspacing{all}{initial}
+
 \newcommand\fs@plaintopbf{\fs@plaintop
 \def\@fs@cfont{\sffamily\bfseries}}
 \let\floatc@plaintop=\floatc@plain
 \let\float@captionold\caption
 \renewcommand{\caption}[1]{\float@captionold{\textsf{#1}}}
-\makeatother
 
 \floatstyle{plaintopbf}
 \newfloat{Recipe}{tbp}{rcp}
@@ -21,20 +101,13 @@
 
 \sisetup{detect-family}
 
-\makeatletter
-\newcommand{\enzrcp@recipewidth}{0.9\textwidth}
-\newcommand{\enzrcp@ingredwidth}{0.45\textwidth}
-\newcommand{\enzrcp@ingrednamewidth}{0.5\textwidth}
-\newcommand{\enzrcp@ingredspacewidth}{0.5em}
-\newcommand{\enzrcp@instrwidth}{0.5\textwidth}
-\makeatother
 
 \newcommand{\NB}{\textbf{N.B.} }
 
 
 \newcommand{\ingred}[3]{#1&#2&\si{#3}\\}
 
-\makeatletter
+
 \newcommand{\recipe}[5][]{%
 \begin{Recipe}[H]
 \caption{#3}
@@ -58,7 +131,6 @@
 \if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi
 \end{minipage}
 \end{Recipe}}
-\makeatother
 
 
 \newcommand{\enzrcp}[6][]{%
