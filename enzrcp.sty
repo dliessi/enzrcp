@@ -97,7 +97,7 @@ instrwidth, all.}%
 \newcommand{\ingred}[3]{#1&#2&\si{#3}\\}
 
 
-\newcommand{\recipe}[5][]{%
+\newcommand{\recipe}[6][]{%
 \begin{Recipe}[H]
 \caption{#3}
 \label{rcp:#2}
@@ -106,15 +106,15 @@ instrwidth, all.}%
 \begin{minipage}[t]{\enzrcp@recipewidth}
 \sffamily
 \begin{minipage}[c]{\enzrcp@ingredwidth}
-\begin{tabular}{l@{\hspace{\enzrcp@ingredspacewidth}}Ss}
+\begin{tabular}{lS[table-format=#4]s}
 \toprule
-#4
+#5
 \bottomrule
 \end{tabular}
 \end{minipage}
 \hfill
 \begin{minipage}[c]{\enzrcp@instrwidth}
-#5
+#6
 \end{minipage}
 \smallskip
 \if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi
@@ -122,12 +122,12 @@ instrwidth, all.}%
 \end{Recipe}}
 
 
-\newcommand{\enzrcp}[6][]{%
-\recipe[#1]{#2}{#3}{#4}{%
-\if\relax\detokenize{#5}\relax\else\textbf{Incubation:} #5\fi
+\newcommand{\enzrcp}[7][]{%
+\recipe[#1]{#2}{#3}{#4}{#5}{%
+\if\relax\detokenize{#6}\relax\else\textbf{Incubation:} #6\fi
 
 \smallskip
-\if\relax\detokenize{#6}\relax\else\textbf{Inactivation:} #6\fi}}
+\if\relax\detokenize{#7}\relax\else\textbf{Inactivation:} #7\fi}}
 
 
 \newcommand{\enzrcpTemp}[1]{\SI{#1}{\degreeCelsius}}
@@ -140,19 +140,20 @@ instrwidth, all.}%
 \def\enzrcpNB{#1}%\if\relax\detokenize{#1}\relax\else\par\smallskip\NB#1\fi}%
 \def\enzrcpID{#2}%
 \def\enzrcpCaption{#3}%
-\def\enzrcpIngred{#4}%
-\def\enzrcpMeltingInitial{#5}%
-\def\enzrcpCycle{#6 $\times$}
-\def\enzrcpMeltingCycle{#7}%
-\def\enzrcpAnnealing{#8}%
-\def\enzrcpElongationCycle{#9}%
+\def\enzrcpTableFormat{#4}
+\def\enzrcpIngred{#5}%
+\def\enzrcpMeltingInitial{#6}%
+\def\enzrcpCycle{#7 $\times$}
+\def\enzrcpMeltingCycle{#8}%
+\def\enzrcpAnnealing{#9}%
 \PCRcontinuedA%
 }
 
-\newcommand{\PCRcontinuedA}[2]{%
-\def\enzrcpElongationFinal{#1}%
-\def\enzrcpStorage{\enzrcpTemp{#2}~$\infty$}%
-\recipe[\enzrcpNB]{\enzrcpID}{\enzrcpCaption}{\enzrcpIngred}{%
+\newcommand{\PCRcontinuedA}[3]{%
+\def\enzrcpElongationCycle{#1}%
+\def\enzrcpElongationFinal{#2}%
+\def\enzrcpStorage{\enzrcpTemp{#3}~$\infty$}%
+\recipe[\enzrcpNB]{\enzrcpID}{\enzrcpCaption}{\enzrcpTableFormat}{\enzrcpIngred}{%
 \textbf{Melting:} \enzrcpMeltingInitial
 
 \schema{\schemabox{\enzrcpCycle}}{\schemabox{%
