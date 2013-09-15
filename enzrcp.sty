@@ -14,14 +14,12 @@
 }
 \DeclareStringOption[0.9\textwidth]{recipewidth}
 \DeclareStringOption[0.45\textwidth]{ingredwidth}
-\DeclareStringOption[0.5\textwidth]{ingrednamewidth}
 \DeclareStringOption[0.5em]{ingredspacewidth}
 \DeclareStringOption[0.5\textwidth]{instrwidth}
 \ProcessKeyvalOptions*
 
 \newlength{\enzrcp@privaterecipewidth}
 \newlength{\enzrcp@privateingredwidth}
-\newlength{\enzrcp@privateingrednamewidth}
 \newlength{\enzrcp@privateingredspacewidth}
 \newlength{\enzrcp@privateinstrwidth}
 
@@ -40,46 +38,37 @@
     \setlength{\enzrcp@privateingredwidth}{#2}%
    }%
   }{%
-   \ifthenelse{\equal{ingrednamewidth}{#1}}{%
+   \ifthenelse{\equal{ingredspacewidth}{#1}}{%
     \ifthenelse{\equal{initial}{#2}}{%
-     \setlength{\enzrcp@privateingrednamewidth}{\enzrcp@ingrednamewidth}%
+     \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}%
     }{%
-     \setlength{\enzrcp@privateingrednamewidth}{#2}%
+     \setlength{\enzrcp@privateingredspacewidth}{#2}%
     }%
    }{%
-    \ifthenelse{\equal{ingredspacewidth}{#1}}{%
+    \ifthenelse{\equal{instrwidth}{#1}}{%
      \ifthenelse{\equal{initial}{#2}}{%
-      \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}%
+      \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
      }{%
-      \setlength{\enzrcp@privateingredspacewidth}{#2}%
+      \setlength{\enzrcp@privateinstrwidth}{#2}%
      }%
     }{%
-     \ifthenelse{\equal{instrwidth}{#1}}{%
+     \ifthenelse{\equal{all}{#1}}{%
       \ifthenelse{\equal{initial}{#2}}{%
+       \setlength{\enzrcp@privaterecipewidth}{\enzrcp@recipewidth}%
+       \setlength{\enzrcp@privateingredwidth}{\enzrcp@ingredwidth}%
+       \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}
        \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
-      }{%
-       \setlength{\enzrcp@privateinstrwidth}{#2}%
-      }%
-     }{%
-      \ifthenelse{\equal{all}{#1}}{%
-       \ifthenelse{\equal{initial}{#2}}{%
-        \setlength{\enzrcp@privaterecipewidth}{\enzrcp@recipewidth}%
-        \setlength{\enzrcp@privateingredwidth}{\enzrcp@ingredwidth}%
-        \setlength{\enzrcp@privateingrednamewidth}{\enzrcp@ingrednamewidth}%
-        \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}
-        \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
-       }{%
-        \PackageError{enzrcp}%
-{Invalid arguments to \string\enzrcpspacing}%
-{The second argument should be 'initial' if the first is 'all'.}%
-       }%
       }{%
        \PackageError{enzrcp}%
 {Invalid arguments to \string\enzrcpspacing}%
-{The first argument must be one of the following:\MessageBreak
-recipewidth, ingredwidth, ingrednamewidth, ingredspacewidth,\MessageBreak
-instrwidth, all.}%
+{The second argument should be 'initial' if the first is 'all'.}%
       }%
+     }{%
+      \PackageError{enzrcp}%
+{Invalid arguments to \string\enzrcpspacing}%
+{The first argument must be one of the following:\MessageBreak
+recipewidth, ingredwidth, ingredspacewidth,\MessageBreak
+instrwidth, all.}%
      }%
     }%
    }%
@@ -117,7 +106,7 @@ instrwidth, all.}%
 \begin{minipage}[t]{\enzrcp@recipewidth}
 \sffamily
 \begin{minipage}[c]{\enzrcp@ingredwidth}
-\begin{tabular}{p{\enzrcp@ingrednamewidth}@{\hspace{\enzrcp@ingredspacewidth}}S@{}s}
+\begin{tabular}{l@{\hspace{\enzrcp@ingredspacewidth}}Ss}
 \toprule
 #4
 \bottomrule
