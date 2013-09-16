@@ -7,76 +7,76 @@
 \RequirePackage{schemata}[2013/03/10]
 \RequirePackage{kvoptions}[2011/06/30]
 \RequirePackage{ifthen}[2001/05/26]
+\RequirePackage{calc}[2007/08/22]
 
 \SetupKeyvalOptions{
  family=enzrcp,
  prefix=enzrcp@
 }
-\DeclareStringOption[0.9\textwidth]{recipewidth}
-\DeclareStringOption[0.45\textwidth]{ingredwidth}
-\DeclareStringOption[1em]{ingredspacewidth}
-\DeclareStringOption[0.5\textwidth]{instrwidth}
+\DeclareStringOption[0.9]{recipewidthratio}
+\DeclareStringOption[0.5]{ingredwidthratio}
+\DeclareStringOption[0.05]{ingredmarginratio}
 \ProcessKeyvalOptions*
 
 \newlength{\enzrcp@privaterecipewidth}
+\edef\enzrcp@privateingredwidthratio{\enzrcp@ingredwidthratio}
+\edef\enzrcp@privateingredmarginratio{\enzrcp@ingredmarginratio}
 \newlength{\enzrcp@privateingredwidth}
-\newlength{\enzrcp@privateingredspacewidth}
 \newlength{\enzrcp@privateinstrwidth}
 
+\newcommand{\enzrcp@setrecipewidth}[1]{%
+ \setlength{\enzrcp@privaterecipewidth}{#1}%
+}
+\newcommand{\enzrcp@setinnerwidths}[2]{%
+ \edef\enzrcp@privateingredwidthratio{#1}
+ \edef\enzrcp@privateingredmarginratio{#2}
+ \setlength{\enzrcp@privateingredwidth}{\enzrcp@privaterecipewidth*\real{#1}}%
+ \setlength{\enzrcp@privateinstrwidth}{\enzrcp@privaterecipewidth-\enzrcp@privaterecipewidth*\real{#2}-\enzrcp@privateingredwidth}%
+}
+
 \newcommand{\enzrcpspacing}[2]{%
- \ifthenelse{\equal{recipewidth}{#1}}{%
+ \ifthenelse{\equal{recipewidthratio}{#1}}{%
   \ifthenelse{\equal{initial}{#2}}{%
-   \setlength{\enzrcp@privaterecipewidth}{\enzrcp@recipewidth}%
+   \enzrcp@setrecipewidth{\enzrcp@recipewidthratio\textwidth}%
   }{%
-   \setlength{\enzrcp@privaterecipewidth}{#2}%
+   \enzrcp@setrecipewidth{#2\textwidth}%
   }%
  }{%
-  \ifthenelse{\equal{ingredwidth}{#1}}{%
+  \ifthenelse{\equal{ingredwidthratio}{#1}}{%
    \ifthenelse{\equal{initial}{#2}}{%
-    \setlength{\enzrcp@privateingredwidth}{\enzrcp@ingredwidth}%
+    \enzrcp@setinnerwidths{\enzrcp@ingredwidthratio}{\enzrcp@privateingredmarginratio}%
    }{%
-    \setlength{\enzrcp@privateingredwidth}{#2}%
+    \enzrcp@setinnerwidths{#2}{\enzrcp@privateingredmarginratio}%
    }%
   }{%
-   \ifthenelse{\equal{ingredspacewidth}{#1}}{%
+   \ifthenelse{\equal{ingredmarginratio}{#1}}{%
     \ifthenelse{\equal{initial}{#2}}{%
-     \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}%
+     \enzrcp@setinnerwidths{\enzrcp@privateingredwidthratio}{\enzrcp@ingredmarginratio}%
     }{%
-     \setlength{\enzrcp@privateingredspacewidth}{#2}%
+     \enzrcp@setinnerwidths{\enzrcp@privateingredwidthratio}{#2}%
     }%
    }{%
-    \ifthenelse{\equal{instrwidth}{#1}}{%
+    \ifthenelse{\equal{all}{#1}}{%
      \ifthenelse{\equal{initial}{#2}}{%
-      \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
-     }{%
-      \setlength{\enzrcp@privateinstrwidth}{#2}%
-     }%
-    }{%
-     \ifthenelse{\equal{all}{#1}}{%
-      \ifthenelse{\equal{initial}{#2}}{%
-       \setlength{\enzrcp@privaterecipewidth}{\enzrcp@recipewidth}%
-       \setlength{\enzrcp@privateingredwidth}{\enzrcp@ingredwidth}%
-       \setlength{\enzrcp@privateingredspacewidth}{\enzrcp@ingredspacewidth}
-       \setlength{\enzrcp@privateinstrwidth}{\enzrcp@instrwidth}%
-      }{%
-       \PackageError{enzrcp}%
-{Invalid arguments to \string\enzrcpspacing}%
-{The second argument should be 'initial' if the first is 'all'.}%
-      }%
+      \enzrcp@setrecipewidth{\enzrcp@recipewidthratio\textwidth}%
+      \enzrcp@setinnerwidths{\enzrcp@ingredwidthratio}{\enzrcp@ingredmarginratio}%
      }{%
       \PackageError{enzrcp}%
 {Invalid arguments to \string\enzrcpspacing}%
-{The first argument must be one of the following:\MessageBreak
-recipewidth, ingredwidth, ingredspacewidth,\MessageBreak
-instrwidth, all.}%
+{The second argument should be 'initial' if the first is 'all'.}%
      }%
+    }{%
+     \PackageError{enzrcp}%
+{Invalid arguments to \string\enzrcpspacing}%
+{The first argument must be one of the following:\MessageBreak
+recipewidthratio, ingredwidthratio, ingredmarginratio, all.}%
     }%
    }%
   }%
  }%
 }
 
-\enzrcpspacing{all}{initial}
+\AtBeginDocument{\enzrcpspacing{all}{initial}}
 
 \newcommand\fs@plaintopbf{\fs@plaintop
 \def\@fs@cfont{\sffamily\bfseries}}
@@ -103,9 +103,9 @@ instrwidth, all.}%
 \label{rcp:#2}
 \medskip
 \centering
-\begin{minipage}[t]{\enzrcp@recipewidth}
+\begin{minipage}[t]{\enzrcp@privaterecipewidth}
 \sffamily
-\begin{minipage}[c]{\enzrcp@ingredwidth}
+\begin{minipage}[c]{\enzrcp@privateingredwidth}
 \begin{tabular}{lS[table-format=#4]s}
 \toprule
 #5
@@ -113,7 +113,7 @@ instrwidth, all.}%
 \end{tabular}
 \end{minipage}
 \hfill
-\begin{minipage}[c]{\enzrcp@instrwidth}
+\begin{minipage}[c]{\enzrcp@privateinstrwidth}
 #6
 \end{minipage}
 \smallskip
