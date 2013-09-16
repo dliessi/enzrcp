@@ -8,6 +8,7 @@
 \RequirePackage{kvoptions}[2011/06/30]
 \RequirePackage{ifthen}[2001/05/26]
 \RequirePackage{calc}[2007/08/22]
+\RequirePackage{caption}[2011/11/02]
 
 \SetupKeyvalOptions{
  family=enzrcp,
@@ -78,13 +79,8 @@ recipewidthratio, ingredwidthratio, ingredmarginratio, all.}%
 
 \AtBeginDocument{\enzrcpspacing{all}{initial}}
 
-\newcommand\fs@plaintopbf{\fs@plaintop
-\def\@fs@cfont{\sffamily\bfseries}}
-\let\floatc@plaintop=\floatc@plain
-\let\float@captionold\caption
-\renewcommand{\caption}[1]{\float@captionold{\textsf{#1}}}
-
-\floatstyle{plaintopbf}
+\captionsetup[plaintop]{labelfont=bf,font+=sf}
+\floatstyle{plaintop}
 \newfloat{Recipe}{tbp}{rcp}
 
 
