@@ -17,6 +17,10 @@
 \DeclareStringOption[0.9]{recipewidthratio}
 \DeclareStringOption[0.5]{ingredwidthratio}
 \DeclareStringOption[0.05]{ingredmarginratio}
+\DeclareStringOption[plaintop]{floatstyle}
+\DeclareBoolOption[true]{bflabel}
+\DeclareBoolOption[true]{sfcaption}
+\DeclareBoolOption[true]{sfrecipe}
 \ProcessKeyvalOptions*
 
 \newlength{\enzrcp@privaterecipewidth}
@@ -79,8 +83,9 @@ recipewidthratio, ingredwidthratio, ingredmarginratio, all.}%
 
 \AtBeginDocument{\enzrcpspacing{all}{initial}}
 
-\captionsetup[plaintop]{labelfont=bf,font+=sf}
-\floatstyle{plaintop}
+\ifenzrcp@bflabel\captionsetup[\enzrcp@floatstyle]{labelfont=bf}\fi
+\ifenzrcp@sfcaption\captionsetup[\enzrcp@floatstyle]{font+=sf}\fi
+\floatstyle{\enzrcp@floatstyle}
 \newfloat{Recipe}{tbp}{rcp}
 
 
@@ -100,7 +105,7 @@ recipewidthratio, ingredwidthratio, ingredmarginratio, all.}%
 \medskip
 \centering
 \begin{minipage}[t]{\enzrcp@privaterecipewidth}
-\sffamily
+\ifenzrcp@sfrecipe\sffamily\fi
 \begin{minipage}[c]{\enzrcp@privateingredwidth}
 \begin{tabular}{lS[table-format=#4]s}
 \toprule
