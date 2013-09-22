@@ -27,6 +27,7 @@
 \RequirePackage{ifthen}[2001/05/26]
 \RequirePackage{calc}[2007/08/22]
 \RequirePackage{caption}[2011/11/02]
+\RequirePackage{etoolbox}[2011/01/03]
 
 \SetupKeyvalOptions{
  family=enzrcp,
@@ -173,6 +174,18 @@ recipewidthratio, ingredwidthratio, ingredmarginratio, all.}%
 \def\enzrcpElongationCycle{#1}%
 \def\enzrcpElongationFinal{#2}%
 \def\enzrcpStorage{\enzrcpTemp{#3}~$\infty$}%
+\ifdefempty{\enzrcpNB}{%
+\recipe{\enzrcpID}{\enzrcpCaption}{\enzrcpTableFormat}{\enzrcpIngred}{%
+\textbf{Melting:} \enzrcpMeltingInitial
+
+\schema{\schemabox{\enzrcpCycle}}{\schemabox{%
+\textbf{Melting:} \enzrcpMeltingCycle\\
+\textbf{Annealing:} \enzrcpAnnealing\\
+\textbf{Elongation:} \enzrcpElongationCycle}}
+
+\textbf{Elongation:} \enzrcpElongationFinal
+
+\textbf{Storage:} \enzrcpStorage}}{%
 \recipe[\enzrcpNB]{\enzrcpID}{\enzrcpCaption}{\enzrcpTableFormat}{\enzrcpIngred}{%
 \textbf{Melting:} \enzrcpMeltingInitial
 
@@ -183,4 +196,4 @@ recipewidthratio, ingredwidthratio, ingredmarginratio, all.}%
 
 \textbf{Elongation:} \enzrcpElongationFinal
 
-\textbf{Storage:} \enzrcpStorage}}
+\textbf{Storage:} \enzrcpStorage}}}
